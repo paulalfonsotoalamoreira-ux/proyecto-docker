@@ -12,26 +12,26 @@ app.use(express.json());
 
 async function main() {
   await client.connect();
-  console.log('✅ MongoDB conectado');
+  console.log('MongoDB conectado');
 
   const db = client.db('mydatabase');
   const users = db.collection('users');
 
-  // 🌐 /
+  
   app.get('/', async (req, res) => {
     const hostHeader = req.headers.host || '';
 
-    // 👉 SI ENTRA POR PUERTO 3000 → JSON
+    
     if (hostHeader.includes(':3000')) {
       const data = await users.find({}).toArray();
       return res.json(data);
     }
 
-    // 👉 SI NO (IP sin puerto) → LOGIN
+    
     res.sendFile(path.join(__dirname, 'views', 'login.html'));
   });
 
-  // 🔐 LOGIN → Mongo
+  
   app.post('/login', async (req, res) => {
     const { user, pass } = req.body;
     if (!user || !pass) return res.json({ success: false });
@@ -45,12 +45,12 @@ async function main() {
     res.json({ success: true });
   });
 
-  // 🌐 WEB pública
+  
   app.use(express.static(path.join(__dirname, 'public')));
 }
 
 app.listen(port, () => {
-  console.log(`🚀 Backend en http://localhost:${port}`);
+  console.log(`App listening at http://localhost:${port}`);
 });
 
 main().catch(console.error);
